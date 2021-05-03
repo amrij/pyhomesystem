@@ -3,17 +3,18 @@ from aiohttp import web
 import logging
 import math
 import time
-import datetime
 
 """
-Setup a bone simple webserver, listen to POST's from a device.
+Setup a bone simple webserver, listen to POST's from a device like a
+raspberry pi, decode results.
 """
 
 
 HOMESYSTEM_LISTEN_PORT = 5199
 
 
-class HSListener:
+
+class HomesystemListener:
     def __init__(self, port=HOMESYSTEM_LISTEN_PORT):
         # API Constants
         self.port = port
@@ -31,39 +32,6 @@ class HSListener:
     def register_listener(self, function):
         self.r_listeners.append(function)
 
-        # slimme meter
-        if "timestamp" in data:
-            data["timestamp"] = datetime.datetime.fromtimestamp(int(data["m_in_1"])).strftime('%Y-%m-%d %H:%M:%S')
-         if "m_in_1" in data:
-            data["m_in_1"] = float(data["m_in_1"])
-        if "m_in_2" in data:
-            data["m_in_2"] = float(data["m_in_2"])
-        if "m_out_1" in data:
-            data["m_out_1"] = float(data["m_out_1"])
-        if "m_out_2" in data:
-            data["m_out_2"] = float(data["m_out_2"])
-        if "m_you" in data:
-            data["m_you"] = float(data["m_you"])
-        if "v_in" in data:
-            data["v_in"] = float(data["v_in"])
-        if "v_out" in data:
-            data["v_out"] = float(data["v_out"])
-        if "v_you" in data:
-            data["v_you"] = float(data["v_you"])
-        if "v_eg" in data:
-            data["v_eg"] = float(data["v_eg"])
-        if "c_in" in data:
-            data["c_in"] = float(data["c_in"])
-        if "c_out" in data:
-            data["c_out"] = float(data["c_out"])
-        if "c_you" in data:
-            data["c_you"] = float(data["c_you"])
-        if "c_eg" in data:
-            data["c_eg"] = float(data["c_eg"])
-
-        # resol
-
-        return(data)
 
     async def handler(self, request: web.BaseRequest):
         if (request.method == 'POST'):
@@ -72,13 +40,12 @@ class HSListener:
             data_copy = {}
             for k in data.keys():
                 data_copy[k] = data[k]
-            home_data = self.convert_units(data_copy)
-            self.last_values = home_data.copy()
+            self.last_values = data_copy.copy()
             self.data_valid = True
             self.lastupd = time.time()
             for rl in self.r_listeners:
                 try:
-                    await rl(home_data)
+                    await rl(data_copy)
                 except:
                     pass
 

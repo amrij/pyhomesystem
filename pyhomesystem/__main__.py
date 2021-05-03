@@ -16,7 +16,7 @@ if __name__ == "__main__":
         exit(1)
 
     print("Firing up webserver to listen on port {0}".format(sys.argv[1]))
-    ws = homesystem.HSListener(port=sys.argv[1])
+    ws = homesystem.HomesystemListener(port=sys.argv[1])
 
     ws.register_listener(my_handler)
     try:
