@@ -12,7 +12,7 @@ setup(name='pyhomesystem',
       long_description='Module to communicate with homesystem',
       url='https://github.com/amrij/pyhomesystem',
       classifiers=[
-          'Development Status :: 1 - Beta',
+          'Development Status :: 4 - Beta',
           'Intended Audience :: Developers',
           'License :: OSI Approved :: Apache Software License',
           'Programming Language :: Python :: 3 :: Only',
